@@ -51,6 +51,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: docker/bake-action@v6
         with:
+          files: deployment/docker/docker-bake.hcl
           targets: image
           load: true
           set: |
@@ -68,6 +69,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: docker/bake-action@v6
         with:
+          files: deployment/docker/docker-bake.hcl
           targets: image
           set: |
             image.platform=${{ matrix.platform }}

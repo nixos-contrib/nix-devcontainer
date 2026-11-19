@@ -11,7 +11,7 @@ group "default" {
 }
 
 target "image" {
-  context    = "."
+  context    = "deployment/docker"
   dockerfile = "Dockerfile"
   args = {
     NIX_VERSION = NIX_VERSION
