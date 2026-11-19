@@ -1,0 +1,1 @@
+source "$(ls -d /home/vscode/.nix-profile/share/nix-direnv/direnvrc)"
