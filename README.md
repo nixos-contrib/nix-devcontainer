@@ -55,11 +55,11 @@ Pin by digest or dated tag if you need reproducible container builds.
 ## Build locally
 
 ```sh
-docker build -t nix-devcontainer .
-docker run --rm -v "$PWD/test:/test:ro" nix-devcontainer bash /test/smoke.sh
+docker buildx bake --load
+docker run --rm -v "$PWD/test:/test:ro" nix-devcontainer:local bash /test/smoke.sh
 ```
 
-`NIX_VERSION` and `BASE_IMAGE` are build arguments.
+`NIX_VERSION` and `BASE_IMAGE` are bake variables, e.g. `NIX_VERSION=2.28.3 docker buildx bake`.
 
 ## Notes
 

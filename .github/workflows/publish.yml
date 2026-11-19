@@ -48,26 +48,41 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        id: build
-        uses: docker/build-push-action@v6
+        if: github.event_name == 'pull_request'
+        uses: docker/bake-action@v6
         with:
-          context: .
-          platforms: ${{ matrix.platform }}
-          load: ${{ github.event_name == 'pull_request' }}
-          tags: ${{ github.event_name == 'pull_request' && 'nix-devcontainer:test' || '' }}
-          outputs: ${{ github.event_name != 'pull_request' && format('type=image,name={0},push-by-digest=true,name-canonical=true,push=true', env.IMAGE) || '' }}
-          cache-from: type=gha,scope=${{ matrix.platform }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
+          targets: image
+          load: true
+          set: |
+            image.platform=${{ matrix.platform }}
+            image.tags=nix-devcontainer:test
+            image.cache-from=type=gha,scope=${{ matrix.platform }}
+            image.cache-to=type=gha,mode=max,scope=${{ matrix.platform }}
 
       - name: Test
         if: github.event_name == 'pull_request'
         run: docker run --rm -v "$PWD/test:/test:ro" nix-devcontainer:test bash /test/smoke.sh
 
+      - name: Build and push by digest
+        id: bake
+        if: github.event_name != 'pull_request'
+        uses: docker/bake-action@v6
+        with:
+          targets: image
+          set: |
+            image.platform=${{ matrix.platform }}
+            image.tags=
+            image.output=type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
+            image.cache-from=type=gha,scope=${{ matrix.platform }}
+            image.cache-to=type=gha,mode=max,scope=${{ matrix.platform }}
+
       - name: Export digest
         if: github.event_name != 'pull_request'
+        env:
+          METADATA: ${{ steps.bake.outputs.metadata }}
         run: |
           mkdir -p "$RUNNER_TEMP/digests"
-          digest="${{ steps.build.outputs.digest }}"
+          digest="$(jq -r '.image["containerimage.digest"]' <<< "$METADATA")"
           touch "$RUNNER_TEMP/digests/${digest#sha256:}"
 
       - name: Upload digest
