@@ -44,13 +44,19 @@ echo "use flake" > .envrc && direnv allow
 
 ## Tags
 
-| Tag        | Meaning                                       |
-| ---------- | --------------------------------------------- |
-| `latest`   | Latest build of `main`, rebuilt weekly        |
-| `YYYYMMDD` | Dated build of `main`, for pinning            |
-| `X.Y.Z`    | Release tags                                  |
+Images are published when a release is cut, not on every commit.
+[release-please](https://github.com/googleapis/release-please) opens a release
+pull request from the conventional commits on `main`; merging it tags the
+release and pushes the image.
 
-Pin by digest or dated tag if you need reproducible container builds.
+| Tag      | Meaning                                 |
+| -------- | --------------------------------------- |
+| `latest` | The newest release                      |
+| `X`      | The newest `X.y.z` release              |
+| `X.Y`    | The newest `X.Y.z` release              |
+| `X.Y.Z`  | One release, for reproducible pinning   |
+
+Pin to `X.Y.Z` or a digest if you need reproducible container builds.
 
 ## Build locally
 
