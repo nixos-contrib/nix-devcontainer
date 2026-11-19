@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/nixos-contrib/nix-devcontainer/actions/workflows/ci.yml/badge.svg)](https://github.com/nixos-contrib/nix-devcontainer/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/nixos-contrib/nix-devcontainer)](https://github.com/nixos-contrib/nix-devcontainer/releases/latest)
-[![Nix 2.28](https://img.shields.io/badge/Nix-2.28-5277C3?logo=nixos&logoColor=white)](https://nixos.org)
+[![Nix Flakes](https://img.shields.io/badge/Nix-Flakes-5277C3?logo=nixos&logoColor=white)](https://wiki.nixos.org/wiki/Flakes)
 [![Dev Container](https://img.shields.io/badge/Dev%20Container-ready-2496ED?logo=docker&logoColor=white)](https://containers.dev)
 [![Platforms](https://img.shields.io/badge/platforms-linux%2Famd64%20%7C%20linux%2Farm64-lightgrey)](#tags)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
