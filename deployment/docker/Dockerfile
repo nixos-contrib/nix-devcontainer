@@ -33,6 +33,9 @@ RUN curl -fsSL "https://releases.nixos.org/nix/nix-${NIX_VERSION}/install" | sh 
 USER root
 COPY direnvrc /home/vscode/.config/direnv/direnvrc
 COPY nix-shell-init.sh /etc/profile.d/nix-devcontainer.sh
+# The single quotes are deliberate: the rc files must hold the literal hook
+# line, which each shell runs at startup, not its output now.
+# hadolint ignore=SC2016
 RUN chown -R vscode:vscode /home/vscode/.config \
     && cat /etc/profile.d/nix-devcontainer.sh >> /etc/bash.bashrc \
     && cat /etc/profile.d/nix-devcontainer.sh >> /etc/zsh/zshenv \
