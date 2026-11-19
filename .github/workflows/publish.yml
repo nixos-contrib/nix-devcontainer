@@ -37,11 +37,11 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -49,7 +49,7 @@ jobs:
 
       - name: Build
         if: github.event_name == 'pull_request'
-        uses: docker/bake-action@v6
+        uses: docker/bake-action@v7
         with:
           files: deployment/docker/docker-bake.hcl
           targets: image
@@ -67,7 +67,7 @@ jobs:
       - name: Build and push by digest
         id: bake
         if: github.event_name != 'pull_request'
-        uses: docker/bake-action@v6
+        uses: docker/bake-action@v7
         with:
           files: deployment/docker/docker-bake.hcl
           targets: image
@@ -89,7 +89,7 @@ jobs:
 
       - name: Upload digest
         if: github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: digests-${{ strategy.job-index }}
           path: ${{ runner.temp }}/digests/*
@@ -105,17 +105,17 @@ jobs:
       packages: write
     steps:
       - name: Download digests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: ${{ runner.temp }}/digests
           pattern: digests-*
           merge-multiple: true
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -123,7 +123,7 @@ jobs:
 
       - name: Docker metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ env.IMAGE }}
           tags: |
