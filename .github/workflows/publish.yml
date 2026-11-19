@@ -62,7 +62,7 @@ jobs:
 
       - name: Test
         if: github.event_name == 'pull_request'
-        run: docker run --rm -v "$PWD/tests:/tests:ro" nix-devcontainer:test bash /tests/smoke.sh
+        run: docker run --rm -v "$PWD/tests:/tests:ro" nix-devcontainer:test nix shell nixpkgs#bats -c bats /tests
 
       - name: Build and push by digest
         id: bake
@@ -77,6 +77,14 @@ jobs:
             image.output=type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
             image.cache-from=type=gha,scope=${{ matrix.platform }}
             image.cache-to=type=gha,mode=max,scope=${{ matrix.platform }}
+
+      - name: Test the pushed image
+        if: github.event_name != 'pull_request'
+        env:
+          METADATA: ${{ steps.bake.outputs.metadata }}
+        run: |
+          digest="$(jq -r '.image["containerimage.digest"]' <<< "$METADATA")"
+          docker run --rm -v "$PWD/tests:/tests:ro" "${IMAGE}@${digest}" nix shell nixpkgs#bats -c bats /tests
 
       - name: Export digest
         if: github.event_name != 'pull_request'

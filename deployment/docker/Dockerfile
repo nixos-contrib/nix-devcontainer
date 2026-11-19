@@ -1,6 +1,9 @@
 ARG BASE_IMAGE=mcr.microsoft.com/devcontainers/base:bookworm
 FROM ${BASE_IMAGE}
 
+# Fail a pipeline when any stage fails, e.g. a broken curl piped into sh.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 ARG NIX_VERSION=2.28.3
 
 # direnv comes from apt; nix-direnv from nixpkgs below.
