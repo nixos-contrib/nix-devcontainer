@@ -62,7 +62,7 @@ jobs:
 
       - name: Test
         if: github.event_name == 'pull_request'
-        run: docker run --rm -v "$PWD/test:/test:ro" nix-devcontainer:test bash /test/smoke.sh
+        run: docker run --rm -v "$PWD/tests:/tests:ro" nix-devcontainer:test bash /tests/smoke.sh
 
       - name: Build and push by digest
         id: bake
